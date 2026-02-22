@@ -71,12 +71,12 @@
     "score": 96
   },
   "events": {
-    "total": 2304,
+    "total": 2466,
     "skills": 251,
     "agents": 261,
     "mcp": 49,
-    "bash": 989,
-    "write": 754
+    "bash": 1131,
+    "write": 774
   },
   "topSkills": [],
   "security": {
@@ -100,7 +100,7 @@
   },
   "disk": {
     "totalMB": 1812.7,
-    "debugMB": 133.4,
+    "debugMB": 133.5,
     "debugPercent": 7.4,
     "barPercent": 44.3,
     "activityLogs": 3,
@@ -108,9 +108,9 @@
     "status": "GOOD"
   },
   "evolution": {
-    "entries": 43,
+    "entries": 44,
     "latestVersion": "v5.3",
-    "latestFixes": 2,
+    "latestFixes": 3,
     "versions": {
       "v3.0": 1,
       "v3.1": 1,
@@ -133,7 +133,7 @@
       "v5.0": 1,
       "v5.1": 1,
       "v5.2": 1,
-      "v5.3": 2
+      "v5.3": 3
     }
   },
   "mcpUsage": [
