@@ -1,0 +1,190 @@
+{
+  "timestamp": "2026-02-22",
+  "range": "7d",
+  "version": "v5.3",
+  "health": {
+    "dimensions": [
+      {
+        "id": "H1",
+        "name": "配置一致性",
+        "score": 100,
+        "status": "PASS",
+        "detail": "全部检查通过"
+      },
+      {
+        "id": "H2",
+        "name": "行为基线",
+        "score": 100,
+        "status": "PASS",
+        "detail": "行为正常"
+      },
+      {
+        "id": "H3",
+        "name": "磁盘健康",
+        "score": 100,
+        "status": "PASS",
+        "detail": "133 MB"
+      },
+      {
+        "id": "H4",
+        "name": "钩子完整性",
+        "score": 100,
+        "status": "PASS",
+        "detail": "13/13 校验通过"
+      },
+      {
+        "id": "H5",
+        "name": "技能索引",
+        "score": 100,
+        "status": "PASS",
+        "detail": "50 技能已索引"
+      },
+      {
+        "id": "H6",
+        "name": "规则缓存",
+        "score": 100,
+        "status": "PASS",
+        "detail": "84 条规则已缓存"
+      },
+      {
+        "id": "H7",
+        "name": "路由准确率",
+        "score": 82,
+        "status": "WARN",
+        "detail": "82% (10/56 纠正)"
+      },
+      {
+        "id": "H8",
+        "name": "学习收敛",
+        "score": 80,
+        "status": "INFO",
+        "detail": "趋于收敛 (avg=0.138, 39 调整)"
+      },
+      {
+        "id": "H9",
+        "name": "路由合规率",
+        "score": 100,
+        "status": "PASS",
+        "detail": "100% (2 条决策)"
+      }
+    ],
+    "score": 96
+  },
+  "events": {
+    "total": 2304,
+    "skills": 251,
+    "agents": 261,
+    "mcp": 49,
+    "bash": 989,
+    "write": 754
+  },
+  "topSkills": [],
+  "security": {
+    "total": 2814,
+    "deny": 1556,
+    "ask": 1257,
+    "hooks": [
+      [
+        "block-dangerous-commands",
+        "1041 deny / 1064 ask"
+      ],
+      [
+        "block-sensitive-files",
+        "515 deny / 193 ask"
+      ],
+      [
+        "integrity-check",
+        "0 deny / 0 ask"
+      ]
+    ]
+  },
+  "disk": {
+    "totalMB": 1812.7,
+    "debugMB": 133.4,
+    "debugPercent": 7.4,
+    "barPercent": 44.3,
+    "activityLogs": 3,
+    "securityLogs": 3,
+    "status": "GOOD"
+  },
+  "evolution": {
+    "entries": 43,
+    "latestVersion": "v5.3",
+    "latestFixes": 2,
+    "versions": {
+      "v3.0": 1,
+      "v3.1": 1,
+      "v3.2": 1,
+      "v3.3": 11,
+      "v3.4": 6,
+      "v3.7": 6,
+      "v3.8": 1,
+      "v3.9": 1,
+      "v4.0": 1,
+      "v4.1": 1,
+      "v4.2": 1,
+      "v4.3": 1,
+      "v4.4": 1,
+      "v4.5": 1,
+      "v4.6": 1,
+      "v4.7": 1,
+      "v4.8": 1,
+      "v4.9": 1,
+      "v5.0": 1,
+      "v5.1": 1,
+      "v5.2": 1,
+      "v5.3": 2
+    }
+  },
+  "mcpUsage": [
+    [
+      "mcp__browserbase__browserbase_session_create",
+      8
+    ],
+    [
+      "mcp__playwright__browser_navigate",
+      7
+    ],
+    [
+      "mcp__deep-research__search",
+      5
+    ],
+    [
+      "mcp__context7__resolve-library-id",
+      5
+    ],
+    [
+      "mcp__sequential-thinking__sequentialthinking",
+      5
+    ],
+    [
+      "mcp__chrome-devtools__take_snapshot",
+      5
+    ],
+    [
+      "mcp__selenium__navigate",
+      5
+    ],
+    [
+      "mcp__browserbase__browserbase_stagehand_navigate",
+      3
+    ],
+    [
+      "mcp__browserbase__browserbase_screenshot",
+      3
+    ],
+    [
+      "mcp__browserbase__browserbase_session_close",
+      3
+    ]
+  ],
+  "system": {
+    "skills": "50 (50 stable)",
+    "agents": "10 (2 opus + 8 sonnet)",
+    "hooks": "13 (4 pre + 6 post + 3 route)",
+    "mcp": "6 全局 + 3 按需模板",
+    "tests": "1224+ tests / 42 files",
+    "routeAccuracy": "82%",
+    "feedbacks": "56 / 10 corrections"
+  }
+}
