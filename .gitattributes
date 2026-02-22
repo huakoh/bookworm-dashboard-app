@@ -1,0 +1,4 @@
+# 强制 gradlew 使用 Unix 换行符
+gradlew text eol=lf
+*.sh text eol=lf
+*.bat text eol=crlf
