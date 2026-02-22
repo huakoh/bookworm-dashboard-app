@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Bookworm Dashboard Snapshot</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100vh;overflow:hidden;font-family:'Segoe UI',system-ui,sans-serif;color:#e2e8f0}
+body{
+  background:#0a0a14;
+  background-image:
+    radial-gradient(ellipse 80% 60% at 20% 10%,rgba(124,58,237,.08) 0%,transparent 60%),
+    radial-gradient(ellipse 60% 50% at 80% 90%,rgba(59,130,246,.06) 0%,transparent 60%);
+  display:flex;flex-direction:column;padding:8px;gap:6px;
+}
+.kpi-bar{
+  display:flex;align-items:center;gap:12px;padding:6px 16px;
+  background:rgba(22,22,40,.8);backdrop-filter:blur(12px);
+  border:1px solid rgba(124,58,237,.15);border-radius:10px;
+  min-height:42px;flex-shrink:0;
+}
+.kpi-bar .logo{font-size:15px;font-weight:700;color:#a78bfa;margin-right:8px}
+.kpi-item{display:flex;align-items:center;gap:4px;font-size:11px}
+.kpi-item .val{font-size:16px;font-weight:700;color:#fff}
+.kpi-item .lbl{color:#94a3b8;font-size:10px}
+.kpi-sep{width:1px;height:20px;background:rgba(148,163,184,.2)}
+.kpi-bar .ts{margin-left:auto;color:#64748b;font-size:10px}
+.grid{
+  flex:1;display:grid;
+  grid-template-columns:1fr 1fr 1fr 1fr;
+  grid-template-rows:1fr 1fr;
+  gap:6px;min-height:0;
+}
+.card{
+  background:rgba(22,22,40,.7);backdrop-filter:blur(12px);
+  border:1px solid rgba(124,58,237,.1);border-radius:10px;
+  padding:10px 12px;display:flex;flex-direction:column;overflow:hidden;
+}
+.card h3{font-size:11px;color:#a78bfa;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;flex-shrink:0}
+.health-score{text-align:center;margin:4px 0}
+.health-score .num{font-size:42px;font-weight:800}
+.health-score .label{font-size:10px;color:#94a3b8}
+.dim-list{flex:1;overflow:hidden}
+.dim-row{display:flex;align-items:center;gap:6px;padding:2px 0;font-size:10px}
+.dim-row .name{flex:1;color:#cbd5e1}
+.dim-row .score{width:28px;text-align:right;font-weight:600}
+.dim-bar{width:60px;height:5px;background:rgba(100,116,139,.3);border-radius:3px;overflow:hidden}
+.dim-bar .fill{height:100%;border-radius:3px}
+.dim-row .badge{font-size:8px;padding:1px 4px;border-radius:3px;font-weight:600}
+.badge-pass{background:rgba(34,197,94,.15);color:#22c55e}
+.badge-warn{background:rgba(234,179,8,.15);color:#eab308}
+.badge-info{background:rgba(59,130,246,.15);color:#3b82f6}
+.event-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:6px}
+.ev-card{background:rgba(100,116,139,.1);border-radius:6px;padding:6px 8px;text-align:center}
+.ev-card .ev-val{font-size:18px;font-weight:700;color:#fff}
+.ev-card .ev-lbl{font-size:9px;color:#94a3b8}
+.skill-row{display:flex;align-items:center;gap:6px;padding:2px 0;font-size:10px}
+.skill-row .rank{color:#64748b;width:14px}
+.skill-row .name{flex:1;color:#e2e8f0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.skill-row .sbar{flex:0 0 50px;height:5px;background:rgba(100,116,139,.3);border-radius:3px;overflow:hidden}
+.skill-row .sbar .sfill{height:100%;background:linear-gradient(90deg,#7c3aed,#a78bfa);border-radius:3px}
+.skill-row .cnt{width:20px;text-align:right;color:#a78bfa;font-weight:600}
+.sec-summary{display:flex;gap:8px;margin-bottom:6px}
+.sec-box{flex:1;background:rgba(100,116,139,.1);border-radius:6px;padding:6px;text-align:center}
+.sec-box .sv{font-size:18px;font-weight:700}
+.sec-box .sl{font-size:9px;color:#94a3b8}
+.sec-deny .sv{color:#ef4444}
+.sec-ask .sv{color:#eab308}
+.sec-total .sv{color:#e2e8f0}
+.hook-row{display:flex;align-items:center;font-size:10px;padding:2px 0}
+.hook-row .hn{flex:1;color:#cbd5e1}
+.hook-row .hv{color:#94a3b8}
+.disk-center{text-align:center;margin:8px 0}
+.disk-center .dv{font-size:36px;font-weight:800;color:#fff}
+.disk-center .dl{font-size:10px;color:#94a3b8}
+.disk-bar-wrap{margin:6px 0}
+.disk-bar{height:10px;background:rgba(100,116,139,.2);border-radius:5px;overflow:hidden}
+.disk-bar .db-fill{height:100%;border-radius:5px}
+.disk-detail{font-size:10px;color:#94a3b8;margin-top:4px}
+.evo-stat{display:flex;gap:8px;margin-bottom:6px}
+.evo-box{flex:1;background:rgba(100,116,139,.1);border-radius:6px;padding:6px;text-align:center}
+.evo-box .ev{font-size:18px;font-weight:700;color:#fff}
+.evo-box .el{font-size:9px;color:#94a3b8}
+.mcp-row{display:flex;align-items:center;gap:6px;padding:2px 0;font-size:10px}
+.mcp-row .mn{flex:1;color:#e2e8f0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mcp-row .mv{color:#60a5fa;font-weight:600;width:20px;text-align:right}
+.mcp-row .mbar{flex:0 0 40px;height:5px;background:rgba(100,116,139,.3);border-radius:3px;overflow:hidden}
+.mcp-row .mbar .mfill{height:100%;background:linear-gradient(90deg,#3b82f6,#60a5fa);border-radius:3px}
+.sys-row{display:flex;justify-content:space-between;padding:2px 0;font-size:10px}
+.sys-row .sk{color:#94a3b8}
+.sys-row .sv2{color:#e2e8f0}
+.watermark{text-align:center;font-size:9px;color:#475569;padding:2px;flex-shrink:0}
+</style>
+</head>
+<body>
+
+<div class="kpi-bar">
+  <span class="logo">Bookworm</span>
+  <div class="kpi-sep"></div>
+  <div class="kpi-item"><span class="val" id="kHealth">96</span><span class="lbl">Health</span></div>
+  <div class="kpi-sep"></div>
+  <div class="kpi-item"><span class="val">50</span><span class="lbl">Skills</span></div>
+  <div class="kpi-sep"></div>
+  <div class="kpi-item"><span class="val">82%</span><span class="lbl">Accuracy</span></div>
+  <div class="kpi-sep"></div>
+  <div class="kpi-item"><span class="val">1950</span><span class="lbl">Events</span></div>
+  <div class="kpi-sep"></div>
+  <div class="kpi-item"><span class="val" style="color:#ef4444">1555</span><span class="lbl">Deny</span></div>
+  <div class="kpi-item"><span class="val" style="color:#eab308">1257</span><span class="lbl">Ask</span></div>
+  <div class="kpi-sep"></div>
+  <div class="kpi-item"><span class="val">138.6</span><span class="lbl">MB</span></div>
+  <span class="ts">Snapshot: 2026-02-22 | Range: 7d | v5.3</span>
+</div>
+
+<div class="grid">
+  <div class="card">
+    <h3>Health Score</h3>
+    <div class="health-score">
+      <div class="num" style="color:#22c55e" id="healthNum">96</div>
+      <div class="label">/ 100</div>
+    </div>
+    <div class="dim-list" id="dimList"></div>
+  </div>
+
+  <div class="card">
+    <h3>Event Overview (7d)</h3>
+    <div class="event-grid">
+      <div class="ev-card"><div class="ev-val">1950</div><div class="ev-lbl">Total Events</div></div>
+      <div class="ev-card"><div class="ev-val" style="color:#a78bfa">251</div><div class="ev-lbl">Skills</div></div>
+      <div class="ev-card"><div class="ev-val" style="color:#60a5fa">231</div><div class="ev-lbl">Agents</div></div>
+      <div class="ev-card"><div class="ev-val" style="color:#34d399">49</div><div class="ev-lbl">MCP</div></div>
+      <div class="ev-card"><div class="ev-val">866</div><div class="ev-lbl">Bash</div></div>
+      <div class="ev-card"><div class="ev-val">553</div><div class="ev-lbl">Write</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Top Skills</h3>
+    <div id="skillList"></div>
+  </div>
+
+  <div class="card">
+    <h3>Security Events</h3>
+    <div class="sec-summary">
+      <div class="sec-box sec-total"><div class="sv">2812</div><div class="sl">Total</div></div>
+      <div class="sec-box sec-deny"><div class="sv">1555</div><div class="sl">Deny</div></div>
+      <div class="sec-box sec-ask"><div class="sv">1257</div><div class="sl">Ask</div></div>
+    </div>
+    <div id="hookList"></div>
+  </div>
+
+  <div class="card">
+    <h3>Disk Usage</h3>
+    <div class="disk-center">
+      <div class="dv">138.6<span style="font-size:14px;color:#94a3b8"> MB</span></div>
+      <div class="dl">Total .claude/</div>
+    </div>
+    <div class="disk-bar-wrap">
+      <div class="disk-bar"><div class="db-fill" style="width:3.4%;background:linear-gradient(90deg,#22c55e,#34d399)"></div></div>
+    </div>
+    <div class="disk-detail">
+      debug/: 133.4 MB (96.2%)<br>
+      Activity logs: 3 | Security logs: 2<br>
+      Status: <span style="color:#22c55e">GOOD</span> (&lt; 4GB)
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Evolution Log</h3>
+    <div class="evo-stat">
+      <div class="evo-box"><div class="ev">43</div><div class="el">Entries</div></div>
+      <div class="evo-box"><div class="ev" style="color:#a78bfa">v5.3</div><div class="el">Latest</div></div>
+      <div class="evo-box"><div class="ev">6</div><div class="el">v5.3 Fixes</div></div>
+    </div>
+    <div style="font-size:10px;color:#94a3b8;line-height:1.8" id="evoVersions"></div>
+  </div>
+
+  <div class="card">
+    <h3>MCP Usage</h3>
+    <div id="mcpList"></div>
+  </div>
+
+  <div class="card">
+    <h3>System Info</h3>
+    <div class="sys-row"><span class="sk">Architecture</span><span class="sv2">v5.3</span></div>
+    <div class="sys-row"><span class="sk">Skills</span><span class="sv2">50 stable</span></div>
+    <div class="sys-row"><span class="sk">Agents</span><span class="sv2">10 (2 opus + 8 sonnet)</span></div>
+    <div class="sys-row"><span class="sk">Hooks</span><span class="sv2">13 (4pre+6post+3route)</span></div>
+    <div class="sys-row"><span class="sk">MCP</span><span class="sv2">6 global + 3 templates</span></div>
+    <div class="sys-row"><span class="sk">Tests</span><span class="sv2">1244+ / 42 files</span></div>
+    <div class="sys-row"><span class="sk">Route Accuracy</span><span class="sv2">82%</span></div>
+    <div class="sys-row"><span class="sk">Feedbacks</span><span class="sv2">56 / 10 corrections</span></div>
+    <div class="sys-row"><span class="sk">Disk Health</span><span class="sv2" style="color:#22c55e">GOOD</span></div>
+    <div class="sys-row"><span class="sk">Date Range</span><span class="sv2">02-16 ~ 02-22</span></div>
+  </div>
+</div>
+
+<div class="watermark">Bookworm Smart Assistant v5.3 | Static Snapshot | 2026-02-22</div>
+
+<script>
+const dims=[
+  {name:'配置一致性',score:100,status:'PASS'},{name:'行为基线',score:100,status:'PASS'},
+  {name:'磁盘健康',score:100,status:'PASS'},{name:'钩子完整性',score:100,status:'PASS'},
+  {name:'技能索引',score:100,status:'PASS'},{name:'规则缓存',score:100,status:'PASS'},
+  {name:'路由准确率',score:82,status:'WARN'},{name:'学习收敛',score:80,status:'INFO'},
+  {name:'路由合规率',score:100,status:'PASS'},
+];
+const avg=Math.round(dims.reduce((s,d)=>s+d.score,0)/dims.length);
+document.getElementById('healthNum').textContent=avg;
+document.getElementById('kHealth').textContent=avg;
+document.getElementById('healthNum').style.color=avg>=90?'#22c55e':avg>=70?'#eab308':'#ef4444';
+document.getElementById('dimList').innerHTML=dims.map(d=>{
+  const c=d.status==='PASS'?'badge-pass':d.status==='WARN'?'badge-warn':'badge-info';
+  return`<div class="dim-row"><span class="name">${d.name}</span><span class="score">${d.score}</span><div class="dim-bar"><div class="fill" style="width:${d.score}%;background:${d.score>=90?'#22c55e':d.score>=70?'#eab308':'#ef4444'}"></div></div><span class="badge ${c}">${d.status}</span></div>`;
+}).join('');
+
+const skills=[['debugger-expert',6],['frontend-expert',6],['api-integration',5],['architect-expert',5],['backend-builder',5],['browser-auto',5],['cloud-native',5],['data-analyst',5],['designer-expert',5],['developer-expert',5]];
+const mx=skills[0][1];
+document.getElementById('skillList').innerHTML=skills.map((s,i)=>`<div class="skill-row"><span class="rank">${i+1}</span><span class="name">${s[0]}</span><div class="sbar"><div class="sfill" style="width:${s[1]/mx*100}%"></div></div><span class="cnt">${s[1]}</span></div>`).join('');
+
+document.getElementById('hookList').innerHTML=[['sensitive-files','514 deny / 193 ask'],['dangerous-commands','1041 deny / 1064 ask'],['integrity-check','0 deny / 1 ask']].map(h=>`<div class="hook-row"><span class="hn">${h[0]}</span><span class="hv">${h[1]}</span></div>`).join('');
+
+document.getElementById('evoVersions').innerHTML=Object.entries({'v3.1':3,'v3.3':61,'v3.4':67,'v3.7':30,'v3.8':15,'v3.9':8,'v4.0':7,'v4.1':8,'v5.3':6}).map(([v,c])=>`<span style="display:inline-block;margin:1px 3px;padding:1px 5px;background:rgba(124,58,237,.15);border-radius:3px;color:#a78bfa">${v}:${c}</span>`).join('');
+
+const mcps=[['browserbase/session_create',8],['playwright/navigate',7],['deep-research/search',5],['context7/resolve-lib',5],['sequential-thinking',5],['devtools/snapshot',5],['selenium/navigate',5],['browserbase/navigate',3],['browserbase/screenshot',3],['browserbase/close',3]];
+const mm=mcps[0][1];
+document.getElementById('mcpList').innerHTML=mcps.map(m=>`<div class="mcp-row"><span class="mn">${m[0]}</span><div class="mbar"><div class="mfill" style="width:${m[1]/mm*100}%"></div></div><span class="mv">${m[1]}</span></div>`).join('');
+</script>
+</body>
+</html>
