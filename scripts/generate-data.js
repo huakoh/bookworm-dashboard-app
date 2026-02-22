@@ -296,6 +296,25 @@ function main() {
     );
   }
 
+  // 质量评分
+  try {
+    const qualityAnalyzer = require(path.join(CLAUDE_HOME, 'scripts', 'quality-analyzer.js'));
+    const qr = qualityAnalyzer.analyze({ days: 30 });
+    data.quality = {
+      avgScore: qr.summary.avgQualityScore,
+      activeSkills: qr.summary.activeSkills,
+      lowQualityCount: qr.summary.lowQualityCount,
+      topSkills: qr.topSkills.slice(0, 5),
+      bottomSkills: qr.bottomSkills.slice(0, 5),
+      recommendations: qr.recommendations.slice(0, 5),
+      mcp: Object.entries(qr.mcp).map(([name, d]) => ({
+        name, calls: d.calls, success: d.scores.success
+      })).sort((a, b) => b.calls - a.calls).slice(0, 5),
+    };
+  } catch {
+    data.quality = null;
+  }
+
   fs.writeFileSync(OUTPUT_PATH, JSON.stringify(data, null, 2), 'utf-8');
   console.log('数据已写入:', OUTPUT_PATH);
   console.log('健康评分:', data.health.score);

@@ -23,14 +23,14 @@
         "name": "磁盘健康",
         "score": 100,
         "status": "PASS",
-        "detail": "133 MB"
+        "detail": "134 MB"
       },
       {
         "id": "H4",
         "name": "钩子完整性",
-        "score": 100,
-        "status": "PASS",
-        "detail": "13/13 校验通过"
+        "score": 85,
+        "status": "FAIL",
+        "detail": "11/13 校验通过, 2 个不匹配"
       },
       {
         "id": "H5",
@@ -68,25 +68,25 @@
         "detail": "100% (2 条决策)"
       }
     ],
-    "score": 96
+    "score": 94
   },
   "events": {
-    "total": 2466,
+    "total": 2627,
     "skills": 251,
-    "agents": 261,
+    "agents": 275,
     "mcp": 49,
-    "bash": 1131,
-    "write": 774
+    "bash": 1239,
+    "write": 813
   },
   "topSkills": [],
   "security": {
-    "total": 2814,
+    "total": 2819,
     "deny": 1556,
-    "ask": 1257,
+    "ask": 1258,
     "hooks": [
       [
         "block-dangerous-commands",
-        "1041 deny / 1064 ask"
+        "1041 deny / 1065 ask"
       ],
       [
         "block-sensitive-files",
@@ -186,5 +186,135 @@
     "tests": "1224+ tests / 42 files",
     "routeAccuracy": "82%",
     "feedbacks": "56 / 10 corrections"
+  },
+  "quality": {
+    "avgScore": 47,
+    "activeSkills": 50,
+    "lowQualityCount": 16,
+    "topSkills": [
+      {
+        "name": "tech-writer-expert",
+        "overall": 99,
+        "calls": 1769
+      },
+      {
+        "name": "database-tuning-expert",
+        "overall": 75,
+        "calls": 5
+      },
+      {
+        "name": "zero-defect-guardian",
+        "overall": 63,
+        "calls": 5
+      },
+      {
+        "name": "ai-ml-expert",
+        "overall": 57,
+        "calls": 4
+      },
+      {
+        "name": "business-plan-skill",
+        "overall": 57,
+        "calls": 5
+      }
+    ],
+    "bottomSkills": [
+      {
+        "name": "data-analyst-expert",
+        "overall": 0,
+        "calls": 5
+      },
+      {
+        "name": "devops-expert",
+        "overall": 0,
+        "calls": 5
+      },
+      {
+        "name": "growth-hacker",
+        "overall": 0,
+        "calls": 5
+      },
+      {
+        "name": "project-audit-expert",
+        "overall": 0,
+        "calls": 5
+      },
+      {
+        "name": "ux-researcher",
+        "overall": 0,
+        "calls": 5
+      }
+    ],
+    "recommendations": [
+      {
+        "skill": "data-analyst-expert",
+        "overall": 0,
+        "action": "建议淘汰",
+        "issues": [
+          "几乎未使用"
+        ]
+      },
+      {
+        "skill": "devops-expert",
+        "overall": 0,
+        "action": "建议淘汰",
+        "issues": [
+          "路由命中率低",
+          "用户快速切换走",
+          "几乎未使用"
+        ]
+      },
+      {
+        "skill": "growth-hacker",
+        "overall": 0,
+        "action": "建议淘汰",
+        "issues": [
+          "几乎未使用"
+        ]
+      },
+      {
+        "skill": "project-audit-expert",
+        "overall": 0,
+        "action": "建议淘汰",
+        "issues": [
+          "几乎未使用"
+        ]
+      },
+      {
+        "skill": "ux-researcher",
+        "overall": 0,
+        "action": "建议淘汰",
+        "issues": [
+          "几乎未使用"
+        ]
+      }
+    ],
+    "mcp": [
+      {
+        "name": "browserbase/browserbase_session_create",
+        "calls": 8,
+        "success": null
+      },
+      {
+        "name": "playwright/browser_navigate",
+        "calls": 7,
+        "success": null
+      },
+      {
+        "name": "deep-research/search",
+        "calls": 5,
+        "success": null
+      },
+      {
+        "name": "context7/resolve-library-id",
+        "calls": 5,
+        "success": null
+      },
+      {
+        "name": "sequential-thinking/sequentialthinking",
+        "calls": 5,
+        "success": null
+      }
+    ]
   }
 }

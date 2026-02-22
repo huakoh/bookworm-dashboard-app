@@ -94,6 +94,14 @@ body{
 .sys-row .sv2{color:#e2e8f0}
 .watermark{text-align:center;font-size:9px;color:#475569;padding:2px;flex-shrink:0}
 .loading{display:flex;align-items:center;justify-content:center;height:100%;color:#64748b;font-size:14px}
+.q-row{display:flex;align-items:center;gap:6px;padding:2px 0;font-size:10px}
+.q-row .q-name{flex:1;color:#e2e8f0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.q-row .q-bar{flex:0 0 50px;height:5px;background:rgba(100,116,139,.3);border-radius:3px;overflow:hidden}
+.q-row .q-bar .q-fill{height:100%;border-radius:3px}
+.q-row .q-score{width:28px;text-align:right;font-weight:600;font-size:10px}
+.q-alert{font-size:9px;padding:2px 6px;border-radius:3px;margin:1px 0;display:flex;align-items:center;gap:4px}
+.q-alert-warn{background:rgba(234,179,8,.1);color:#eab308}
+.q-alert-danger{background:rgba(239,68,68,.1);color:#ef4444}
 </style>
 </head>
 <body>
@@ -151,9 +159,13 @@ body{
   </div>
 
   <div class="card">
-    <h3>Evolution Log</h3>
-    <div class="evo-stat" id="evoStat"></div>
-    <div style="font-size:10px;color:#94a3b8;line-height:1.8" id="evoVersions"></div>
+    <h3>Quality Score</h3>
+    <div class="health-score">
+      <div class="num" id="qualityNum" style="font-size:36px">--</div>
+      <div class="label">Avg Quality / 100</div>
+    </div>
+    <div id="qualityList"></div>
+    <div id="qualityAlerts" style="margin-top:4px"></div>
   </div>
 
   <div class="card">
@@ -251,15 +263,30 @@ function render(d) {
   document.getElementById('diskDetail').innerHTML =
     `debug/: ${dk.debugMB} MB (${dk.debugPercent}%)<br>Activity logs: ${dk.activityLogs} | Security logs: ${dk.securityLogs}<br>Status: <span style="color:${dkColor}">${dk.status}</span> (&lt; 4GB)`;
 
-  // 演化日志
-  const evo = d.evolution;
-  document.getElementById('evoStat').innerHTML =
-    `<div class="evo-box"><div class="ev">${evo.entries}</div><div class="el">Entries</div></div>` +
-    `<div class="evo-box"><div class="ev" style="color:#a78bfa">${evo.latestVersion}</div><div class="el">Latest</div></div>` +
-    `<div class="evo-box"><div class="ev">${evo.latestFixes}</div><div class="el">${evo.latestVersion} Fixes</div></div>`;
-  document.getElementById('evoVersions').innerHTML = Object.entries(evo.versions).map(([v, c]) =>
-    `<span style="display:inline-block;margin:1px 3px;padding:1px 5px;background:rgba(124,58,237,.15);border-radius:3px;color:#a78bfa">${v}:${c}</span>`
-  ).join('');
+  // 质量评分
+  const q = d.quality;
+  if (q) {
+    const qNum = document.getElementById('qualityNum');
+    qNum.textContent = q.avgScore;
+    qNum.style.color = q.avgScore >= 70 ? '#22c55e' : q.avgScore >= 40 ? '#eab308' : '#ef4444';
+
+    // Top 质量技能
+    const topQ = q.topSkills || [];
+    document.getElementById('qualityList').innerHTML = topQ.map(s => {
+      const c = s.overall >= 70 ? '#22c55e' : s.overall >= 40 ? '#eab308' : '#ef4444';
+      return `<div class="q-row"><span class="q-name">${s.name}</span><div class="q-bar"><div class="q-fill" style="width:${s.overall}%;background:${c}"></div></div><span class="q-score" style="color:${c}">${s.overall}</span></div>`;
+    }).join('');
+
+    // 告警
+    const alerts = (q.recommendations || []).slice(0, 3);
+    document.getElementById('qualityAlerts').innerHTML = alerts.map(r => {
+      const cls = r.action === '建议淘汰' ? 'q-alert-danger' : 'q-alert-warn';
+      return `<div class="q-alert ${cls}">${r.action === '建议淘汰' ? '✗' : '!'} ${r.skill}: ${r.issues[0] || r.action}</div>`;
+    }).join('');
+  } else {
+    document.getElementById('qualityNum').textContent = 'N/A';
+    document.getElementById('qualityList').innerHTML = '<div style="font-size:10px;color:#64748b">暂无质量数据</div>';
+  }
 
   // MCP
   const mcps = d.mcpUsage;
@@ -280,6 +307,8 @@ function render(d) {
     ['Route Accuracy', sys.routeAccuracy],
     ['Feedbacks', sys.feedbacks],
     ['Disk Health', `<span style="color:${dkColor}">${dk.status}</span>`],
+    ['Evolution', `${d.evolution.entries} entries (${d.evolution.latestVersion})`],
+    ['Quality Avg', q ? `<span style="color:${q.avgScore>=70?'#22c55e':q.avgScore>=40?'#eab308':'#ef4444'}">${q.avgScore}/100</span>` : 'N/A'],
     ['Date Range', d.timestamp]
   ].map(([k, v]) =>
     `<div class="sys-row"><span class="sk">${k}</span><span class="sv2">${v}</span></div>`
